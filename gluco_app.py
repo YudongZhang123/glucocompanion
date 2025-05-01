@@ -7,6 +7,12 @@ st.write("""
 **Purpose:** This tool is designed to help users adjust their rapid-acting insulin dose to maintain blood glucose levels within the target range of **4.4 - 8.0 mmol/L** after meals.
 
 **Disclaimer:** This tool provides general recommendations based on standard diabetes management guidelines. It is not a substitute for professional medical advice. Always consult a healthcare provider for personalized treatment.
+
+**About ICR (Insulin-to-Carbohydrate Ratio):**
+- A typical ICR for adults is between **10–15 g/unit**.
+- Children or insulin-sensitive individuals may have ICRs of **15–20 g/unit** or more.
+- People with insulin resistance (e.g., during puberty or with obesity) may need a lower ICR, such as **5–10 g/unit**.
+- This value is individualized and often determined based on total daily insulin dose or clinical experience.
 """)
 
 # User Inputs
@@ -35,7 +41,16 @@ if st.button("Predict"):
     post_meal_4hr = post_meal_2hr - continued_decrease_4hr
     post_meal_4hr = round(post_meal_4hr, 1)
 
+    # Determine glucose level feedback
+    def interpret_glucose(value):
+        if value < 4.4:
+            return "⚠️ Low blood glucose detected. Please consume fast-acting carbohydrates immediately."
+        elif value > 8.0:
+            return "⚠️ High blood glucose detected. Consider taking corrective insulin and monitor for symptoms."
+        else:
+            return "✅ Blood glucose is within the target range. Keep up the good work!"
+
     # Display Results
     st.success(f"Recommended Rapid-acting Insulin Dose: {insulin_dose} units")
-    st.success(f"Predicted 2-hour Post-meal Blood Glucose: {post_meal_2hr} mmol/L")
-    st.success(f"Predicted 4-hour Post-meal Blood Glucose: {post_meal_4hr} mmol/L")
+    st.success(f"Predicted 2-hour Post-meal Blood Glucose: {post_meal_2hr} mmol/L\n{interpret_glucose(post_meal_2hr)}")
+    st.success(f"Predicted 4-hour Post-meal Blood Glucose: {post_meal_4hr} mmol/L\n{interpret_glucose(post_meal_4hr)}")
